@@ -7,12 +7,17 @@ export default function App() {
   const [modalIsVisible, setModalIsVisible] = useState(false);
   const [goals, setGoals] = useState([]);
 
-  function addNewGoalHandler() {
+  function startAddNewGoalHandler() {
     setModalIsVisible(true);
+  }
+
+  function endAddNewGoalHandler() {
+    setModalIsVisible(false);
   }
 
   function addGoalHandler(enteredGoal) {
     setGoals((currentGoals) => [...currentGoals, { text: enteredGoal, id: Math.random().toString() }])
+    endAddNewGoalHandler()
   }
 
   function deleteGoalHandler(id) {
@@ -24,23 +29,23 @@ export default function App() {
 
   return (
     <View style={styles.appContainer}>
-      <Button title='Add New Goal' color='#5e0acc' onPress={addNewGoalHandler}/>
-      {modalIsVisible && <GoalInput visible={modalIsVisible} AddGoal={addGoalHandler}/>}
+      <Button title='Add New Goal' color='#5e0acc' onPress={startAddNewGoalHandler} />
+      {modalIsVisible && <GoalInput visible={modalIsVisible} onAddGoal={addGoalHandler} onCancel={endAddNewGoalHandler} />}
       <View style={styles.goalsContainer}>
-        <FlatList 
-        data={goals} 
-        renderItem={(itemData) => {
-          return <GoalItem 
-          text={itemData.item.text}
-          id={itemData.item.id}
-          onDeleteItem={deleteGoalHandler}
-          />;
-        }}
-        keyExtractor={(item, index) => {
-          return item.id
-        }}
-        alwaysBounceVertical={false}
-       />
+        <FlatList
+          data={goals}
+          renderItem={(itemData) => {
+            return <GoalItem
+              text={itemData.item.text}
+              id={itemData.item.id}
+              onDeleteItem={deleteGoalHandler}
+            />;
+          }}
+          keyExtractor={(item, index) => {
+            return item.id
+          }}
+          alwaysBounceVertical={false}
+        />
       </View>
     </View>
   );
